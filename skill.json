@@ -1,0 +1,23 @@
+{
+  "name": "photo-book-to-ebook",
+  "version": "1.0.0",
+  "description": "Turn photos of a printed book into a proofread ebook (Markdown/HTML/EPUB): batch vision transcription with page bookkeeping, structural QC, re-shoot loop, diff-marked corrections, dependency-free EPUB build.",
+  "entrypoint": "SKILL.md",
+  "license": "MIT",
+  "runtime": {
+    "python": ">=3.8",
+    "third_party_optional": { "pillow": "image prep (rotate/crop/contrast)" }
+  },
+  "tools": [
+    { "name": "init_project", "path": "scripts/init_project.py", "stdin": false,
+      "usage": "python scripts/init_project.py --photos <dir> --out <dir> --title <title>" },
+    { "name": "prep_page", "path": "scripts/prep_page.py", "stdin": false,
+      "usage": "python scripts/prep_page.py <image> [--rotate 90|both] [--crop l,t,r,b] [--gray] [--contrast 1.4] [--out <file>]" },
+    { "name": "qc_book", "path": "scripts/qc_book.py", "stdin": false, "exit_code_gate": true,
+      "usage": "python scripts/qc_book.py <transcript-dir> [--json out.json] [--skip-pages 2-5] | python scripts/qc_book.py <book.epub> --epub" },
+    { "name": "build_book", "path": "scripts/build_book.py", "stdin": false,
+      "usage": "python scripts/build_book.py <transcript-dir> --title <title> --author <author> --out <dir>" }
+  ],
+  "requires": { "vision": true, "filesystem": true },
+  "tags": ["transcription", "epub", "proofreading", "tables", "quality-control", "ocr-free"]
+}
